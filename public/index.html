@@ -6,9 +6,11 @@
     <title>Hand Tracking (MediaPipe)</title>
     <link rel="stylesheet" href="./style.css" />
 
-    <!-- MediaPipe Hands (classic JS build) -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <link rel="icon" href="./favicon.ico" />
+
+    <!-- MediaPipe Hands (vendored for reliability / faster first paint) -->
+    <script src="./vendor/mediapipe/hands/hands.js"></script>
+    <script src="./vendor/mediapipe/drawing_utils/drawing_utils.js"></script>
   </head>
 
   <body>
@@ -25,6 +27,15 @@
         <video id="video" autoplay muted playsinline></video>
         <canvas id="overlay"></canvas>
         <div id="fpsOverlay" class="hud">FPS: —</div>
+        <div id="loadingOverlay" class="loading">
+          <div class="loadingInner">
+            <div class="spinner" aria-hidden="true"></div>
+            <div class="loadingTitle">首次加载中…</div>
+            <div id="loadingText" class="loadingText">
+              第一次打开可能需要下载手部模型资源（取决于网络速度），请稍候。
+            </div>
+          </div>
+        </div>
       </section>
 
       <aside class="panel">

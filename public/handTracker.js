@@ -7,7 +7,7 @@ export class HandTracker {
     if (!HandsCtor) throw new Error("MediaPipe Hands not loaded");
 
     this.hands = new HandsCtor({
-      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
+      locateFile: (file) => `./vendor/mediapipe/hands/${file}`,
     });
 
     this.hands.setOptions({
@@ -33,4 +33,3 @@ export class HandTracker {
     await this.hands.send({ image: videoEl });
   }
 }
-

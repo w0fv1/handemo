@@ -9,6 +9,8 @@ const toggleBtn = document.getElementById("toggleBtn");
 const gestureNameEl = document.getElementById("gestureName");
 const gestureDetailEl = document.getElementById("gestureDetail");
 const fpsOverlayEl = document.getElementById("fpsOverlay");
+const loadingOverlayEl = document.getElementById("loadingOverlay");
+const loadingTextEl = document.getElementById("loadingText");
 const logEl = document.getElementById("log");
 const fingerStatesEl = document.getElementById("fingerStates");
 const pinchStatusEl = document.getElementById("pinchStatus");
@@ -16,6 +18,15 @@ const cameraButtonEl = document.getElementById("cameraButton");
 const cameraButtonTextEl = document.getElementById("cameraButtonText");
 const cameraMenuEl = document.getElementById("cameraMenu");
 const cameraDropdownEl = document.getElementById("cameraDropdown");
+
+function showLoading(text) {
+  if (loadingTextEl && text) loadingTextEl.textContent = text;
+  if (loadingOverlayEl) loadingOverlayEl.hidden = false;
+}
+
+function hideLoading() {
+  if (loadingOverlayEl) loadingOverlayEl.hidden = true;
+}
 
 function fmt2(n) {
   return String(Math.floor(n)).padStart(2, "0");
@@ -397,6 +408,7 @@ navigator.mediaDevices?.addEventListener?.("devicechange", () => {
 
 tracker.onResults((results) => {
   updateLayout(false);
+  hideLoading();
 
   const perfNow = performance.now();
   if (lastResultsPerfMs != null) {
@@ -525,6 +537,7 @@ async function start() {
   setPill(camStatusEl, "CAM: requesting…", "warn");
   toggleBtn.disabled = true;
   try {
+    showLoading("正在启动摄像头并加载手部模型（首次可能较慢）…");
     await camera.start(selectedDeviceId);
     await refreshCameraMenu();
     updateLayout(true);
@@ -536,6 +549,7 @@ async function start() {
   } catch (err) {
     running = false;
     setPill(camStatusEl, "CAM: blocked", "bad");
+    showLoading("摄像头启动失败或权限被拒绝。请检查浏览器权限后重试。");
     appendLog(`${fmtTimeMs(Date.now())}  error=camera_denied_or_failed`);
     // eslint-disable-next-line no-console
     console.error(err);
@@ -549,6 +563,7 @@ async function stop() {
   running = false;
   toggleBtn.textContent = "Start";
   setPill(camStatusEl, "CAM: stopped", "warn");
+  hideLoading();
   prevIndexTipPx = null;
   prevTsMs = null;
   gestureHist.length = 0;
@@ -574,3 +589,5 @@ setPill(camStatusEl, "CAM: idle", "warn");
 initFingerPills();
 closeCameraMenu();
 refreshCameraMenu().catch(() => {});
+// Once JS has booted, remove the initial hint until the user starts the camera.
+hideLoading();
