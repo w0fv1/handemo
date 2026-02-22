@@ -1,0 +1,13 @@
+{
+  "name": "hand-tracking-mediapipe-ws",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser hand tracking (MediaPipe) served by Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

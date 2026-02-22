@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hand Tracking (MediaPipe)</title>
+    <link rel="stylesheet" href="/style.css" />
+
+    <!-- MediaPipe Hands (classic JS build) -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="title">Hand Tracking</div>
+      <div class="status">
+        <span id="camStatus" class="pill">CAM: idle</span>
+        <button id="toggleBtn" class="btn">Start</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="stage">
+        <video id="video" autoplay muted playsinline></video>
+        <canvas id="overlay"></canvas>
+        <div id="fpsOverlay" class="hud">FPS: —</div>
+      </section>
+
+      <aside class="panel">
+        <div class="panelTitle">Status</div>
+
+        <div class="statusCard">
+          <div class="gestureHeader">
+            <div id="gestureName" class="gestureName">—</div>
+            <div id="gestureDetail" class="gestureSub">—</div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <div class="metricLabel">Fingers</div>
+              <div id="fingerStates" class="fingers">—</div>
+            </div>
+            <div class="metric">
+              <div class="metricLabel">Pinch</div>
+              <div id="pinchStatus" class="metricValue">—</div>
+            </div>
+          </div>
+
+          <div class="cameraRow">
+            <div class="metricLabel">Camera</div>
+            <div class="cameraControls">
+              <div id="cameraDropdown" class="dropdown">
+                <button id="cameraButton" class="dropBtn" type="button">
+                  <span id="cameraButtonText" class="dropText">Select camera</span>
+                  <span class="dropCaret">▾</span>
+                </button>
+                <div id="cameraMenu" class="dropMenu" hidden></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="panelTitle">Log</div>
+        <pre id="log" class="log"></pre>
+      </aside>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
