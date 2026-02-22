@@ -18,7 +18,6 @@
       <div class="title">Hand Tracking</div>
       <div class="status">
         <span id="camStatus" class="pill">CAM: idle</span>
-        <button id="toggleBtn" class="btn">Start</button>
       </div>
     </header>
 
@@ -33,6 +32,9 @@
             <div class="loadingTitle">首次加载中…</div>
             <div id="loadingText" class="loadingText">
               第一次打开可能需要下载手部模型资源（取决于网络速度），请稍候。
+            </div>
+            <div class="loadingActions">
+              <button id="retryBtn" class="btn btnSmall" type="button" hidden>Retry</button>
             </div>
           </div>
         </div>

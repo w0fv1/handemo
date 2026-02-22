@@ -5,12 +5,12 @@ import { classifyGesture, extendedListChinese, fingerStatesToChinese } from "./g
 const videoEl = document.getElementById("video");
 const canvasEl = document.getElementById("overlay");
 const camStatusEl = document.getElementById("camStatus");
-const toggleBtn = document.getElementById("toggleBtn");
 const gestureNameEl = document.getElementById("gestureName");
 const gestureDetailEl = document.getElementById("gestureDetail");
 const fpsOverlayEl = document.getElementById("fpsOverlay");
 const loadingOverlayEl = document.getElementById("loadingOverlay");
 const loadingTextEl = document.getElementById("loadingText");
+const retryBtnEl = document.getElementById("retryBtn");
 const logEl = document.getElementById("log");
 const fingerStatesEl = document.getElementById("fingerStates");
 const pinchStatusEl = document.getElementById("pinchStatus");
@@ -22,10 +22,17 @@ const cameraDropdownEl = document.getElementById("cameraDropdown");
 function showLoading(text) {
   if (loadingTextEl && text) loadingTextEl.textContent = text;
   if (loadingOverlayEl) loadingOverlayEl.hidden = false;
+  if (retryBtnEl) retryBtnEl.hidden = true;
 }
 
 function hideLoading() {
   if (loadingOverlayEl) loadingOverlayEl.hidden = true;
+}
+
+function showError(text) {
+  if (loadingTextEl && text) loadingTextEl.textContent = text;
+  if (loadingOverlayEl) loadingOverlayEl.hidden = false;
+  if (retryBtnEl) retryBtnEl.hidden = false;
 }
 
 function fmt2(n) {
@@ -358,9 +365,11 @@ async function refreshCameraMenu() {
     label: d.label || `Camera ${i + 1}`,
   }));
 
-  if (!selectedDeviceId && cameraDevices.length) {
-    selectedDeviceId = cameraDevices[0].deviceId;
-  }
+  // If we already started a stream, prefer the active device id from the track settings.
+  const active = camera.getActiveDeviceId?.();
+  if (active) selectedDeviceId = active;
+
+  if (!selectedDeviceId && cameraDevices.length) selectedDeviceId = cameraDevices[0].deviceId;
 
   cameraMenuEl.textContent = "";
   for (const d of cameraDevices) {
@@ -535,33 +544,28 @@ async function processingLoop() {
 
 async function start() {
   setPill(camStatusEl, "CAM: requesting…", "warn");
-  toggleBtn.disabled = true;
   try {
-    showLoading("正在启动摄像头并加载手部模型（首次可能较慢）…");
+    showLoading("正在请求摄像头权限并加载手部模型（首次可能较慢）…");
     await camera.start(selectedDeviceId);
     await refreshCameraMenu();
     updateLayout(true);
     running = true;
     pinchActive = false;
     setPill(camStatusEl, "CAM: running", "ok");
-    toggleBtn.textContent = "Stop";
     await processingLoop();
   } catch (err) {
     running = false;
     setPill(camStatusEl, "CAM: blocked", "bad");
-    showLoading("摄像头启动失败或权限被拒绝。请检查浏览器权限后重试。");
+    showError("摄像头启动失败或权限被拒绝。请检查浏览器权限后点击 Retry。");
     appendLog(`${fmtTimeMs(Date.now())}  error=camera_denied_or_failed`);
     // eslint-disable-next-line no-console
     console.error(err);
-  } finally {
-    toggleBtn.disabled = false;
   }
 }
 
 async function stop() {
   loopStop();
   running = false;
-  toggleBtn.textContent = "Start";
   setPill(camStatusEl, "CAM: stopped", "warn");
   hideLoading();
   prevIndexTipPx = null;
@@ -579,9 +583,8 @@ async function stop() {
   await camera.stop();
 }
 
-toggleBtn.addEventListener("click", async () => {
-  if (running) await stop();
-  else await start();
+retryBtnEl?.addEventListener("click", () => {
+  start().catch(() => {});
 });
 
 // Init UI.
@@ -589,5 +592,6 @@ setPill(camStatusEl, "CAM: idle", "warn");
 initFingerPills();
 closeCameraMenu();
 refreshCameraMenu().catch(() => {});
-// Once JS has booted, remove the initial hint until the user starts the camera.
-hideLoading();
+// Auto-start: request permission and begin tracking on first load.
+showLoading("正在请求摄像头权限…");
+start().catch(() => {});

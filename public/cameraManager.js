@@ -42,6 +42,14 @@ export class CameraManager {
     // Ensure playback starts quickly.
     await this.videoEl.play();
 
+    try {
+      const track = stream.getVideoTracks?.()[0];
+      const settings = track?.getSettings?.();
+      if (settings?.deviceId) this.deviceId = settings.deviceId;
+    } catch {
+      // ignore
+    }
+
     return stream;
   }
 
@@ -64,5 +72,8 @@ export class CameraManager {
       // ignore
     }
   }
-}
 
+  getActiveDeviceId() {
+    return this.deviceId;
+  }
+}
