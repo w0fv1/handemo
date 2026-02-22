@@ -137,6 +137,10 @@ body {
   pointer-events: none;
 }
 
+.loading[hidden] {
+  display: none !important;
+}
+
 .loadingInner {
   max-width: 520px;
   text-align: center;
