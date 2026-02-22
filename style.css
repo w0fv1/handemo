@@ -1,0 +1,411 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b0f19;
+  --panel: #111a2e;
+  --text: #e8eefc;
+  --muted: rgba(232, 238, 252, 0.7);
+  --accent: #7aa2ff;
+  --danger: #ff5c7a;
+  --ok: #4dd4ac;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: radial-gradient(1200px 700px at 20% 10%, #17224a 0%, var(--bg) 55%);
+  background-color: var(--bg);
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial,
+    "PingFang SC", "Microsoft YaHei", sans-serif;
+  min-height: 100svh;
+  background: transparent;
+  color: var(--text);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+.title {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(122, 162, 255, 0.14);
+  color: var(--text);
+  border: 1px solid rgba(122, 162, 255, 0.35);
+  cursor: pointer;
+}
+
+.btnSmall {
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.btn:hover {
+  border-color: rgba(122, 162, 255, 0.6);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 14px;
+  padding: 14px;
+  min-height: calc(100svh - 57px);
+}
+
+.stage {
+  position: relative;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 420px;
+}
+
+#video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.35);
+  transform: scaleX(-1);
+}
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hud {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: radial-gradient(
+    800px 420px at 50% 35%,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.25) 55%,
+    rgba(0, 0, 0, 0.08) 100%
+  );
+  pointer-events: none;
+}
+
+.loading[hidden] {
+  display: none !important;
+}
+
+.loadingInner {
+  max-width: 520px;
+  text-align: center;
+  background: rgba(10, 12, 18, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 18px;
+  padding: 14px 14px 12px;
+  backdrop-filter: blur(10px);
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-top-color: rgba(255, 255, 255, 0.88);
+  margin: 0 auto 10px;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingTitle {
+  font-weight: 750;
+  margin-bottom: 6px;
+}
+
+.loadingText {
+  font-size: 12px;
+  color: rgba(232, 238, 252, 0.78);
+  line-height: 1.5;
+}
+
+.loadingActions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.panel {
+  background: rgba(17, 26, 46, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.panelTitle {
+  font-weight: 650;
+  margin-bottom: 10px;
+}
+
+.log {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(232, 238, 252, 0.9);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.statusCard {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.12));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.gestureHeader {
+  margin-bottom: 10px;
+}
+
+.gestureName {
+  font-size: 18px;
+  font-weight: 750;
+  letter-spacing: 0.2px;
+}
+
+.gestureSub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(232, 238, 252, 0.78);
+  line-height: 1.45;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.metric {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 10px;
+  min-height: 56px;
+}
+
+.metricLabel {
+  font-size: 12px;
+  color: rgba(232, 238, 252, 0.7);
+  margin-bottom: 8px;
+}
+
+.metricValue {
+  font-size: 13px;
+  font-weight: 650;
+  color: rgba(232, 238, 252, 0.95);
+}
+
+.cameraRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.cameraControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 250px;
+  max-width: 280px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(232, 238, 252, 0.95);
+  cursor: pointer;
+}
+
+.dropBtn:hover {
+  border-color: rgba(122, 162, 255, 0.6);
+}
+
+.dropBtn:focus {
+  outline: none;
+  border-color: rgba(122, 162, 255, 0.7);
+}
+
+.dropText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  flex: 1;
+}
+
+.dropCaret {
+  color: rgba(232, 238, 252, 0.7);
+  font-size: 12px;
+}
+
+.dropMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  z-index: 5;
+  background: rgba(9, 12, 20, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.dropItem {
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: 0;
+  color: rgba(232, 238, 252, 0.92);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dropItem:hover {
+  background: rgba(122, 162, 255, 0.12);
+}
+
+.dropMeta {
+  font-size: 12px;
+  color: rgba(232, 238, 252, 0.65);
+}
+
+.fingers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-start;
+  font-size: 12px;
+  color: rgba(232, 238, 252, 0.95);
+}
+
+.fingerPill {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(232, 238, 252, 0.92);
+}
+
+.fingerOn {
+  border-color: rgba(77, 212, 172, 0.45);
+  color: rgba(77, 212, 172, 0.95);
+}
+
+.fingerOff {
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(232, 238, 252, 0.72);
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 10px 0;
+}
+
+.log {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  background: rgba(0, 0, 0, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 10px;
+}
+
+@media (max-width: 980px) {
+  .layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .panel {
+    min-height: 200px;
+  }
+}
