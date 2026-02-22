@@ -324,6 +324,7 @@ let running = false;
 let loopStop = () => {};
 let lastStatusUiMs = 0;
 const STATUS_UI_EVERY_MS = 60;
+let starting = false;
 
 // Pinch hysteresis so the UI reacts immediately without needing "shake" stabilization.
 let pinchActive = false;
@@ -506,6 +507,7 @@ async function processingLoop() {
   const PROCESS_EVERY_MS = 33; // ~30 FPS
   let stopped = false;
   let inFlight = false;
+  let processedOnce = false;
   loopStop = () => {
     stopped = true;
   };
@@ -520,6 +522,10 @@ async function processingLoop() {
         inFlight = true;
         try {
           await tracker.processVideoFrame(videoEl);
+          if (!processedOnce) {
+            processedOnce = true;
+            hideLoading();
+          }
         } catch {
           // ignore
         } finally {
@@ -543,15 +549,18 @@ async function processingLoop() {
 }
 
 async function start() {
+  if (starting || running) return;
+  starting = true;
   setPill(camStatusEl, "CAM: requesting…", "warn");
   try {
-    showLoading("正在请求摄像头权限并加载手部模型（首次可能较慢）…");
+    showLoading("正在请求摄像头权限…");
     await camera.start(selectedDeviceId);
     await refreshCameraMenu();
     updateLayout(true);
     running = true;
     pinchActive = false;
     setPill(camStatusEl, "CAM: running", "ok");
+    showLoading("正在加载手部模型并开始识别…");
     await processingLoop();
   } catch (err) {
     running = false;
@@ -560,6 +569,8 @@ async function start() {
     appendLog(`${fmtTimeMs(Date.now())}  error=camera_denied_or_failed`);
     // eslint-disable-next-line no-console
     console.error(err);
+  } finally {
+    starting = false;
   }
 }
 
