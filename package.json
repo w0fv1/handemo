@@ -2,6 +2,7 @@
   "name": "hand-tracking-mediapipe-ws",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.0.0",
   "description": "Browser hand tracking (MediaPipe) served by Node.js",
   "main": "server.js",
   "scripts": {
